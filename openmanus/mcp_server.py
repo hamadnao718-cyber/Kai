@@ -59,7 +59,11 @@ api_key = "{api_key}"
 max_tokens = 4096
 temperature = 0.0
 """
+        # Write with owner-only permissions (0o600) so the API key is not
+        # readable by other users on the same system.
+        _CONFIG_PATH.touch(mode=0o600)
         _CONFIG_PATH.write_text(content)
+        _CONFIG_PATH.chmod(0o600)
         logging.info("Wrote config/config.toml from environment variables.")
 
 
