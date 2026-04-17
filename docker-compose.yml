@@ -1,0 +1,48 @@
+# Kai + OpenManus — Docker Compose
+#
+# Runs the Kai web app alongside the OpenManus MCP server so Kai can
+# discover and call OpenManus tools natively.
+#
+# Prerequisites:
+#   1. Copy openmanus/.env.example -> openmanus/.env and set your API key.
+#   2. Clone OpenManus into openmanus/src:
+#        git clone https://github.com/hamadnao718-cyber/OpenManus openmanus/src
+#
+# Usage:
+#   docker compose up
+
+services:
+
+  # ── OpenManus MCP server ──────────────────────────────────────────────────
+  openmanus-mcp:
+    build:
+      context: openmanus
+      dockerfile: Dockerfile
+    env_file:
+      - openmanus/.env
+    environment:
+      OPENMANUS_HOST: "0.0.0.0"
+      OPENMANUS_PORT: "8765"
+    ports:
+      - "8765:8765"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c",
+             "import urllib.request; urllib.request.urlopen('http://localhost:8765/mcp')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ── Kai web app ───────────────────────────────────────────────────────────
+  # Build the Kai web distribution locally first:
+  #   ./gradlew :composeApp:wasmJsBrowserDistribution
+  # The output lands in composeApp/build/dist/wasmJs/productionExecutable/
+  kai-web:
+    image: nginx:alpine
+    volumes:
+      - ./composeApp/build/dist/wasmJs/productionExecutable:/usr/share/nginx/html:ro
+    ports:
+      - "8080:80"
+    restart: unless-stopped
+    depends_on:
+      - openmanus-mcp

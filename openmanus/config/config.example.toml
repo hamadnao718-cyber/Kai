@@ -1,0 +1,36 @@
+# OpenManus MCP Server — configuration template
+#
+# Copy this file to config.toml and fill in your values:
+#   cp config/config.example.toml config/config.toml
+#
+# Alternatively, set the OPENMANUS_* environment variables listed in
+# .env.example and let mcp_server.py generate config.toml automatically.
+
+# ── LLM ────────────────────────────────────────────────────────────────────
+[llm]
+model       = "gpt-4o"                      # Model to use for agent reasoning
+base_url    = "https://api.openai.com/v1"   # OpenAI-compatible endpoint
+api_key     = "YOUR_API_KEY"                # Replace with your actual key
+max_tokens  = 4096
+temperature = 0.0
+
+# Vision model (used when browser screenshots are attached)
+[llm.vision]
+model       = "gpt-4o"
+base_url    = "https://api.openai.com/v1"
+api_key     = "YOUR_API_KEY"
+max_tokens  = 4096
+temperature = 0.0
+
+# ── Browser ─────────────────────────────────────────────────────────────────
+# [browser]
+# headless          = true   # Set false to see the browser window (debugging)
+# disable_security  = true
+
+# ── Search ──────────────────────────────────────────────────────────────────
+# [search]
+# engine = "DuckDuckGo"   # Google | Baidu | DuckDuckGo | Bing
+
+# ── MCP ─────────────────────────────────────────────────────────────────────
+[mcp]
+server_reference = "app.mcp.server"
