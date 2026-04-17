@@ -176,6 +176,37 @@ All popular servers are free and require no API key. MCP servers auto-reconnect 
 
 ## Integrations
 
+### OpenManus Agent Tools
+
+Kai integrates with [OpenManus](https://github.com/hamadnao718-cyber/OpenManus) — a general-purpose AI agent framework — via the Model Context Protocol. Running the OpenManus MCP server locally exposes powerful agent tools (web browser control, shell execution, file editing) as first-class Kai tools on every platform.
+
+```
+Kai ──[Streamable HTTP MCP]──► OpenManus MCP server
+                                  • bash     — run shell commands
+                                  • browser  — navigate and scrape the web
+                                  • editor   — read / write / patch files
+```
+
+**Quick start:**
+
+```bash
+# 1. Clone OpenManus source
+git clone https://github.com/hamadnao718-cyber/OpenManus openmanus/src
+
+# 2. Install dependencies
+cd openmanus && pip install -r requirements.txt && playwright install chromium
+
+# 3. Set your LLM API key
+cp .env.example .env   # edit .env
+
+# 4. Start the MCP server
+python mcp_server.py   # http://localhost:8765/mcp
+```
+
+Then in Kai: **Settings → Tools → Add MCP Server → URL: `http://localhost:8765/mcp`**
+
+See [docs/openmanus-integration.md](docs/openmanus-integration.md) for the full guide including Docker Compose setup.
+
 ### Splinterlands Auto-Battle (Android & Desktop)
 
 Kai can automatically play [Splinterlands](https://splinterlands.com) Wild Ranked battles. Configure one or more LLM services in priority order, add your Hive account, and hit Start -- Kai will continuously find matches, pick teams using LLM-powered strategy, and submit them on-chain. Falls back to a simple greedy picker if all LLM services fail. Available in **Settings > Integrations**.
